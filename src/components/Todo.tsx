@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil";
-import { IToDo, toDoState } from "../recoil";
+import { Categories, IToDo, toDoState } from "../recoil";
 
 function ToDo({ text, category, id }: IToDo) {
   const setToDos = useSetRecoilState(toDoState);
@@ -17,17 +17,15 @@ function ToDo({ text, category, id }: IToDo) {
 
   return (
     <li>
-      <span>
-        {category}: {text}
-      </span>
-      {category !== "DOING" && (
-        <button onClick={() => onClick("DOING")}>Doing</button>
+      <span>{text}</span>
+      {category !== Categories.DOING && (
+        <button onClick={() => onClick(Categories.DOING)}>Doing</button>
       )}
-      {category !== "TO_DO" && (
-        <button onClick={() => onClick("TO_DO")}>To Do</button>
+      {category !== Categories.TO_DO && (
+        <button onClick={() => onClick(Categories.TO_DO)}>To Do</button>
       )}
-      {category !== "DONE" && (
-        <button onClick={() => onClick("DONE")}>Done</button>
+      {category !== Categories.DONE && (
+        <button onClick={() => onClick(Categories.DONE)}>Done</button>
       )}
     </li>
   );
