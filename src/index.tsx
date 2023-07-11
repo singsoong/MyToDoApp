@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <RecoilRoot>
-    <GlobalStyle />
     <ThemeProvider theme={darkTheme}>
+      <GlobalStyle />
       <App />
     </ThemeProvider>
   </RecoilRoot>
