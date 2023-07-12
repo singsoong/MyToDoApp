@@ -1,13 +1,9 @@
 import React from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./recoil/atoms";
+import DragabbleCard from "./components/DragabbleCard";
 
 // Droppable: 어떤 것을 드롭할 수 있는 영역
 // Draggable: 드래그할 수 있는 영역
@@ -32,17 +28,7 @@ function App() {
             {(magic) => (
               <Board ref={magic.innerRef} {...magic.droppableProps}>
                 {toDos.map((toDo, idx) => (
-                  <Draggable draggableId={toDo} index={idx} key={toDo}>
-                    {(magic) => (
-                      <Card
-                        ref={magic.innerRef}
-                        {...magic.draggableProps}
-                        {...magic.dragHandleProps}
-                      >
-                        {toDo}
-                      </Card>
-                    )}
-                  </Draggable>
+                  <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
                 ))}
                 {magic.placeholder}
               </Board>
@@ -66,13 +52,6 @@ const Boards = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   width: 100%;
-  border-radius: 10px;
-`;
-
-const Card = styled.div`
-  background-color: ${(props) => props.theme.cardColor};
-  padding: 10px;
-  margin-bottom: 5px;
   border-radius: 10px;
 `;
 
