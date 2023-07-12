@@ -1,14 +1,29 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { toDoState } from "./recoil/atoms";
 
 // Droppable: 어떤 것을 드롭할 수 있는 영역
 // Draggable: 드래그할 수 있는 영역
 
-const toDos = ["a", "b", "c", "d", "e"];
-
 function App() {
-  const onDragEnd = () => {};
+  const [toDos, setToDos] = useRecoilState(toDoState);
+
+  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
+    if (!destination) return;
+    setToDos((oldToDos) => {
+      const copyToDos = [...oldToDos];
+      copyToDos.splice(source.index, 1);
+      copyToDos.splice(destination?.index, 0, draggableId);
+      return copyToDos;
+    });
+  };
   return (
     <Wrapper>
       <Boards>
@@ -17,7 +32,7 @@ function App() {
             {(magic) => (
               <Board ref={magic.innerRef} {...magic.droppableProps}>
                 {toDos.map((toDo, idx) => (
-                  <Draggable draggableId={toDo} index={idx} key={idx}>
+                  <Draggable draggableId={toDo} index={idx} key={toDo}>
                     {(magic) => (
                       <Card
                         ref={magic.innerRef}
