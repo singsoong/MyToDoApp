@@ -1,9 +1,9 @@
 import React from "react";
-import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./recoil/atoms";
-import DragabbleCard from "./components/DragabbleCard";
+import Board from "./components/Board";
 
 // Droppable: 어떤 것을 드롭할 수 있는 영역
 // Draggable: 드래그할 수 있는 영역
@@ -13,44 +13,30 @@ function App() {
 
   const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
     if (!destination) return;
-    setToDos((oldToDos) => {
-      const copyToDos = [...oldToDos];
-      copyToDos.splice(source.index, 1);
-      copyToDos.splice(destination?.index, 0, draggableId);
-      return copyToDos;
-    });
+    // setToDos((oldToDos) => {
+    //   const copyToDos = [...oldToDos];
+    //   copyToDos.splice(source.index, 1);
+    //   copyToDos.splice(destination?.index, 0, draggableId);
+    //   return copyToDos;
+    // });
   };
   return (
     <Wrapper>
       <Boards>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="one">
-            {(magic) => (
-              <Board ref={magic.innerRef} {...magic.droppableProps}>
-                {toDos.map((toDo, idx) => (
-                  <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
-                ))}
-                {magic.placeholder}
-              </Board>
-            )}
-          </Droppable>
+          {Object.keys(toDos).map((boardId) => (
+            <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />
+          ))}
         </DragDropContext>
       </Boards>
     </Wrapper>
   );
 }
 
-const Board = styled.div`
-  padding-top: 30px;
-  padding: 20px 10px;
-  border-radius: 5px;
-  min-height: 200px;
-  background-color: ${(props) => props.theme.boardColor};
-`;
-
 const Boards = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
   width: 100%;
   border-radius: 10px;
 `;
