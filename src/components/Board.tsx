@@ -12,6 +12,7 @@ function Board({ toDos, boardId }: IBoardProps) {
     <Droppable droppableId={boardId}>
       {(magic) => (
         <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
+          <BoardTitle>{boardId}</BoardTitle>
           {toDos.map((toDo, idx) => (
             <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
           ))}
@@ -28,6 +29,12 @@ const Wrapper = styled.div`
   border-radius: 5px;
   min-height: 200px;
   background-color: ${(props) => props.theme.boardColor};
+`;
+
+const BoardTitle = styled.h2`
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
 `;
 
 export default Board;
