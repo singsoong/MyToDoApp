@@ -32,7 +32,7 @@ const Wrapper = styled.div`
   padding-top: 30px;
   padding: 20px 10px;
   border-radius: 5px;
-  min-height: 200px;
+  min-height: 300px;
   background-color: ${(props) => props.theme.boardColor};
   display: flex;
   flex-direction: column;

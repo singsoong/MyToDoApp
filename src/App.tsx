@@ -66,7 +66,7 @@ const Boards = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
+  max-width: 700px;
   width: 100%;
   margin: 0 auto;
   justify-content: center;
