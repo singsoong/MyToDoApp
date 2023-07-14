@@ -97,9 +97,9 @@ interface ICardWrapperProps {
 const CardWrapper = styled.div<ICardWrapperProps>`
   background-color: ${(props) =>
     props.isDraggingOver
-      ? "#dfe6e9"
-      : props.isDraggingFromThis
       ? "#b2bec3"
+      : props.isDraggingFromThis
+      ? "#dfe6e9"
       : "transparent"};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
