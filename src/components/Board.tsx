@@ -10,13 +10,18 @@ interface IBoardProps {
 function Board({ toDos, boardId }: IBoardProps) {
   return (
     <Droppable droppableId={boardId}>
-      {(magic) => (
+      {(magic, snapshot) => (
         <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
           <BoardTitle>{boardId}</BoardTitle>
-          {toDos.map((toDo, idx) => (
-            <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
-          ))}
-          {magic.placeholder}
+          <CardWrapper
+            isDraggingOver={snapshot.isDraggingOver}
+            isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
+          >
+            {toDos.map((toDo, idx) => (
+              <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
+            ))}
+            {magic.placeholder}
+          </CardWrapper>
         </Wrapper>
       )}
     </Droppable>
@@ -29,12 +34,33 @@ const Wrapper = styled.div`
   border-radius: 5px;
   min-height: 200px;
   background-color: ${(props) => props.theme.boardColor};
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 `;
 
 const BoardTitle = styled.h2`
   text-align: center;
   margin-bottom: 15px;
   font-weight: bold;
+`;
+
+interface ICardWrapperProps {
+  isDraggingFromThis: boolean;
+  isDraggingOver: boolean;
+}
+
+const CardWrapper = styled.div<ICardWrapperProps>`
+  background-color: ${(props) =>
+    props.isDraggingOver
+      ? "#dfe6e9"
+      : props.isDraggingFromThis
+      ? "#b2bec3"
+      : "transparent"};
+  flex-grow: 1;
+  transition: background-color 0.3s ease-in-out;
+  padding: 10px;
 `;
 
 export default Board;

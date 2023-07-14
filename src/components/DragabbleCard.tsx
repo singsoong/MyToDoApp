@@ -10,11 +10,12 @@ interface IDragabbleCardProps {
 function DragabbleCard({ toDo, idx }: IDragabbleCardProps) {
   return (
     <Draggable draggableId={toDo} index={idx} key={toDo}>
-      {(magic) => (
+      {(magic, snapshot) => (
         <Card
           ref={magic.innerRef}
           {...magic.draggableProps}
           {...magic.dragHandleProps}
+          isDragging={snapshot.isDragging}
         >
           {toDo}
         </Card>
@@ -23,8 +24,11 @@ function DragabbleCard({ toDo, idx }: IDragabbleCardProps) {
   );
 }
 
-const Card = styled.div`
-  background-color: ${(props) => props.theme.cardColor};
+const Card = styled.div<{ isDragging: boolean }>`
+  background-color: ${(props) =>
+    props.isDragging ? "#74b9ff" : props.theme.cardColor};
+  box-shadow: ${(props) =>
+    props.isDragging ? "0px 2px 5px rgba(0,0,0,0.05)" : "none"};
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 10px;
