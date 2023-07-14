@@ -3,13 +3,14 @@ import styled from "styled-components";
 import React from "react";
 
 interface IDragabbleCardProps {
-  toDo: string;
+  toDoId: number;
+  toDoText: string;
   idx: number;
 }
 
-function DragabbleCard({ toDo, idx }: IDragabbleCardProps) {
+function DragabbleCard({ toDoId, toDoText, idx }: IDragabbleCardProps) {
   return (
-    <Draggable draggableId={toDo} index={idx} key={toDo}>
+    <Draggable draggableId={toDoId + ""} index={idx} key={toDoId}>
       {(magic, snapshot) => (
         <Card
           ref={magic.innerRef}
@@ -17,7 +18,7 @@ function DragabbleCard({ toDo, idx }: IDragabbleCardProps) {
           {...magic.dragHandleProps}
           isDragging={snapshot.isDragging}
         >
-          {toDo}
+          {toDoText}
         </Card>
       )}
     </Draggable>

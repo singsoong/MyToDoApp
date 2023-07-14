@@ -1,32 +1,75 @@
 import { Droppable } from "react-beautiful-dnd";
 import DragabbleCard from "./DragabbleCard";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
+import { IToDo, toDoState } from "../recoil/atoms";
+import { useSetRecoilState } from "recoil";
 
 interface IBoardProps {
-  toDos: string[];
+  toDos: IToDo[];
   boardId: string;
 }
 
+interface IForm {
+  toDo: string;
+}
+
 function Board({ toDos, boardId }: IBoardProps) {
+  const { register, setValue, handleSubmit } = useForm<IForm>();
+  const setToDos = useSetRecoilState(toDoState);
+  const onValid = (data: IForm) => {
+    const newToDo = {
+      id: Date.now(),
+      text: data.toDo,
+    };
+    setToDos((allBoards) => {
+      return { ...allBoards, [boardId]: [...allBoards[boardId], newToDo] };
+    });
+    setValue("toDo", "");
+  };
+
   return (
-    <Droppable droppableId={boardId}>
-      {(magic, snapshot) => (
-        <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
-          <BoardTitle>{boardId}</BoardTitle>
-          <CardWrapper
-            isDraggingOver={snapshot.isDraggingOver}
-            isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
-          >
-            {toDos.map((toDo, idx) => (
-              <DragabbleCard key={toDo} toDo={toDo} idx={idx} />
-            ))}
-            {magic.placeholder}
-          </CardWrapper>
-        </Wrapper>
-      )}
-    </Droppable>
+    <div>
+      <TitleContainer>
+        <BoardTitle>{boardId}</BoardTitle>
+        <Form onSubmit={handleSubmit(onValid)}>
+          <input
+            {...register("toDo", { required: true })}
+            type="text"
+            placeholder={`Add Task on ${boardId}`}
+          />
+        </Form>
+      </TitleContainer>
+      <Droppable droppableId={boardId}>
+        {(magic, snapshot) => (
+          <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
+            <CardWrapper
+              isDraggingOver={snapshot.isDraggingOver}
+              isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
+            >
+              {toDos.map((toDo, idx) => (
+                <DragabbleCard
+                  key={toDo.id}
+                  toDoId={toDo.id}
+                  toDoText={toDo.text}
+                  idx={idx}
+                />
+              ))}
+              {magic.placeholder}
+            </CardWrapper>
+          </Wrapper>
+        )}
+      </Droppable>
+    </div>
   );
 }
+
+const TitleContainer = styled.div`
+  background-color: ${(props) => props.theme.boardColor};
+  border-radius: 5px;
+  padding: 10px 10px;
+  margin-bottom: 5px;
+`;
 
 const Wrapper = styled.div`
   padding-top: 30px;
@@ -60,7 +103,14 @@ const CardWrapper = styled.div<ICardWrapperProps>`
       : "transparent"};
   flex-grow: 1;
   transition: background-color 0.3s ease-in-out;
-  padding: 10px;
+`;
+
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 `;
 
 export default Board;
