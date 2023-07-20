@@ -1,14 +1,33 @@
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import React from "react";
+import React, { useState } from "react";
+import { ReactComponent as Delete } from "../images/deleteBin.svg";
+import { toDoState } from "../recoil/atoms";
+import { useSetRecoilState } from "recoil";
 
 interface IDragabbleCardProps {
   toDoId: number;
   toDoText: string;
   idx: number;
+  boardId: string;
 }
 
-function DragabbleCard({ toDoId, toDoText, idx }: IDragabbleCardProps) {
+function DragabbleCard({
+  toDoId,
+  toDoText,
+  idx,
+  boardId,
+}: IDragabbleCardProps) {
+  const [isHover, setIsHover] = useState(false);
+  const setToDos = useSetRecoilState(toDoState);
+
+  const onDelete = () => {
+    setToDos((allBoards) => {
+      const boardCopy = [...allBoards[boardId]];
+      boardCopy.splice(idx, 1);
+      return { ...allBoards, [boardId]: boardCopy };
+    });
+  };
   return (
     <Draggable draggableId={toDoId + ""} index={idx} key={toDoId}>
       {(magic, snapshot) => (
@@ -17,8 +36,15 @@ function DragabbleCard({ toDoId, toDoText, idx }: IDragabbleCardProps) {
           {...magic.draggableProps}
           {...magic.dragHandleProps}
           isDragging={snapshot.isDragging}
+          onMouseOver={() => {
+            setIsHover(true);
+          }}
+          onMouseOut={() => {
+            setIsHover(false);
+          }}
         >
           {toDoText}
+          {isHover && <DeleteBtn onClick={onDelete} />}
         </Card>
       )}
     </Draggable>
@@ -33,6 +59,15 @@ const Card = styled.div<{ isDragging: boolean }>`
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 10px;
+`;
+
+const DeleteBtn = styled(Delete)`
+  float: right;
+  cursor: pointer;
+  border-radius: 5px;
+  &:hover {
+    background-color: #8080803d;
+  }
 `;
 
 export default React.memo(DragabbleCard);

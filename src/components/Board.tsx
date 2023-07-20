@@ -52,6 +52,7 @@ function Board({ toDos, boardId }: IBoardProps) {
                   key={toDo.id}
                   toDoId={toDo.id}
                   toDoText={toDo.text}
+                  boardId={boardId}
                   idx={idx}
                 />
               ))}
