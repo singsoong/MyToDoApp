@@ -4,7 +4,9 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { IToDo, toDoState } from "../recoil/atoms";
 import { useSetRecoilState } from "recoil";
-
+import { useState } from "react";
+import { ReactComponent as Delete } from "../images/deleteBin.svg";
+import { ReactComponent as Edit } from "../images/edit.svg";
 interface IBoardProps {
   toDos: IToDo[];
   boardId: string;
@@ -15,6 +17,7 @@ interface IForm {
 }
 
 function Board({ toDos, boardId }: IBoardProps) {
+  const [isHover, setIsHover] = useState(false);
   const { register, setValue, handleSubmit } = useForm<IForm>();
   const setToDos = useSetRecoilState(toDoState);
   const onValid = (data: IForm) => {
@@ -28,10 +31,33 @@ function Board({ toDos, boardId }: IBoardProps) {
     setValue("toDo", "");
   };
 
+  const onDelete = () => {
+    setToDos((allBoards) => {
+      const copyBoard = { ...allBoards };
+      delete copyBoard[boardId];
+      return copyBoard;
+    });
+  };
+
   return (
-    <div>
-      <TitleContainer>
-        <BoardTitle>{boardId}</BoardTitle>
+    <div
+      onMouseOver={() => {
+        setIsHover(true);
+      }}
+      onMouseOut={() => {
+        setIsHover(false);
+      }}
+    >
+      <BoardTopContainer>
+        <TitleContainer>
+          <BoardTitle>{boardId}</BoardTitle>
+          {isHover && (
+            <BtnContainer>
+              <EditBtn />
+              <DeleteBtn onClick={onDelete} />
+            </BtnContainer>
+          )}
+        </TitleContainer>
         <Form onSubmit={handleSubmit(onValid)}>
           <input
             {...register("toDo", { required: true })}
@@ -39,7 +65,7 @@ function Board({ toDos, boardId }: IBoardProps) {
             placeholder={`Add Task on ${boardId}`}
           />
         </Form>
-      </TitleContainer>
+      </BoardTopContainer>
       <Droppable droppableId={boardId}>
         {(magic, snapshot) => (
           <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
@@ -65,11 +91,17 @@ function Board({ toDos, boardId }: IBoardProps) {
   );
 }
 
-const TitleContainer = styled.div`
+const BoardTopContainer = styled.div`
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;
   padding: 10px 10px;
   margin-bottom: 5px;
+`;
+
+const TitleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
 `;
 
 const Wrapper = styled.div`
@@ -112,6 +144,28 @@ const Form = styled.form`
     width: 100%;
     margin-bottom: 10px;
   }
+`;
+
+const DeleteBtn = styled(Delete)`
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 7px;
+  &:hover {
+    background-color: #8080803d;
+  }
+`;
+
+const EditBtn = styled(Edit)`
+  cursor: pointer;
+  border-radius: 5px;
+  &:hover {
+    background-color: #8080803d;
+  }
+`;
+
+const BtnContainer = styled.div`
+  position: absolute;
+  right: 0;
 `;
 
 export default Board;
