@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./recoil/atoms";
 import Board from "./components/Board";
+import { ReactComponent as Add } from "./images/addBoard.svg";
 
 // Droppable: 어떤 것을 드롭할 수 있는 영역
 // Draggable: 드래그할 수 있는 영역
@@ -45,8 +46,19 @@ function App() {
       });
     }
   };
+
+  const onAddBoard = () => {
+    const newBoard = window.prompt("새롭게 생성할 보드 이름을 입력해주세요.");
+    if (newBoard) {
+      setToDos((allBoards) => {
+        return { ...allBoards, [newBoard]: [] };
+      });
+    }
+  };
+
   return (
     <Wrapper>
+      <AddBoardBtn onClick={onAddBoard} />
       <Boards>
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.keys(toDos).map((boardId) => (
@@ -74,6 +86,23 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
+  flex-direction: column;
+  position: relative;
+`;
+
+const AddBoardBtn = styled(Add)`
+  position: absolute;
+  top: 50px;
+  right: 0;
+  cursor: pointer;
+  background-color: #dfe6e9;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  &:hover {
+    background-color: #2e7db364;
+  }
 `;
 
 export default App;
