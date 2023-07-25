@@ -43,7 +43,7 @@ function DragabbleCard({
 
   const onEdit = () => {
     setIsEdit((prev) => !prev);
-    setInterval(() => {
+    setTimeout(() => {
       setFocus("toDo");
     }, 100);
   };

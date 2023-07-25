@@ -1,12 +1,11 @@
 import { Droppable } from "react-beautiful-dnd";
 import DragabbleCard from "./DragabbleCard";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useForm } from "react-hook-form";
 import { IToDo, toDoState } from "../recoil/atoms";
 import { useSetRecoilState } from "recoil";
 import { useState } from "react";
 import { ReactComponent as Delete } from "../images/deleteBin.svg";
-import { ReactComponent as Edit } from "../images/edit.svg";
 interface IBoardProps {
   toDos: IToDo[];
   boardId: string;
@@ -20,6 +19,7 @@ function Board({ toDos, boardId }: IBoardProps) {
   const [isHover, setIsHover] = useState(false);
   const { register, setValue, handleSubmit } = useForm<IForm>();
   const setToDos = useSetRecoilState(toDoState);
+
   const onValid = (data: IForm) => {
     const newToDo = {
       id: Date.now(),
@@ -53,7 +53,6 @@ function Board({ toDos, boardId }: IBoardProps) {
           <BoardTitle>{boardId}</BoardTitle>
           {isHover && (
             <BtnContainer>
-              <EditBtn />
               <DeleteBtn onClick={onDelete} />
             </BtnContainer>
           )}
@@ -155,17 +154,19 @@ const DeleteBtn = styled(Delete)`
   }
 `;
 
-const EditBtn = styled(Edit)`
-  cursor: pointer;
-  border-radius: 5px;
-  &:hover {
-    background-color: #8080803d;
+const fadeInAnimation = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 `;
 
 const BtnContainer = styled.div`
   position: absolute;
   right: 0;
+  animation: ${fadeInAnimation} 0.5s ease;
 `;
 
 export default Board;
