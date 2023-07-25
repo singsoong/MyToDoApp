@@ -58,7 +58,9 @@ function App() {
 
   return (
     <Wrapper>
-      <AddBoardBtn onClick={onAddBoard} />
+      <BtnWrapper>
+        <AddBoardBtn onClick={onAddBoard} />
+      </BtnWrapper>
       <Boards>
         <DragDropContext onDragEnd={onDragEnd}>
           {Object.keys(toDos).map((boardId) => (
@@ -76,6 +78,7 @@ const Boards = styled.div`
   gap: 10px;
   width: 100%;
   border-radius: 10px;
+  margin-bottom: 100px;
 `;
 
 const Wrapper = styled.div`
@@ -85,7 +88,6 @@ const Wrapper = styled.div`
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   flex-direction: column;
   position: relative;
 `;
@@ -103,6 +105,11 @@ const AddBoardBtn = styled(Add)`
   &:hover {
     background-color: #2e7db364;
   }
+`;
+
+const BtnWrapper = styled.div`
+  width: 100%;
+  height: 200px;
 `;
 
 export default App;
