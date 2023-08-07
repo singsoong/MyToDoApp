@@ -11,3 +11,7 @@
 
 - ~~보드 많이 생성 시 레이아웃 깨짐~~
 - ~~동시에 두 카드를 edit 할 경우~~
+
+## 배포
+
+- https://singsoong.github.io/MyToDoApp/
